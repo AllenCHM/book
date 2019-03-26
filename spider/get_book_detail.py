@@ -10,10 +10,14 @@ import requests
 import pymongo
 from lxml import etree
 import time
+import multiprocessing
+import os
+import redis
 
-conn = pymongo.MongoClient('127.0.0.1')
+conn = pymongo.MongoClient('127.0.0.1', connect=False)
 doc = conn['books']['dhzw']
 doc_detail = conn['books']['dhzw_detail']
+r_conn = redis.StrictRedis('127.0.0.1')
 
 headers = {
     'Host': 'www.dhzw.org',
@@ -21,6 +25,7 @@ headers = {
 }
 
 url = 'https://www.dhzw.org/book/358/358318/'
+
 
 def get_book_detail(url):
     r = requests.get(url, headers=headers)
@@ -49,4 +54,38 @@ def get_book_detail(url):
     for i in book_chapter_list:
         doc_detail.update({'auth_id':auth_id, 'book_id':book_id, 'name':i['name']}, {'$set':i}, True)
 
-get_book_detail(url)
+def test(lock):
+    print os.getpid(), 'fork --'
+    r_conn = redis.StrictRedis('127.0.0.1')
+    while True:
+        lock.acquire()
+        url = r_conn.lpop('need_spider_detail')
+        lock.release()
+        if not url:
+            time.sleep(0.1)
+            continue
+        if r_conn.get(url):
+            continue
+        print os.getpid(), url
+        try:
+            get_book_detail(url)
+            r_conn.set(url, 1)
+        except IndexError:
+            r_conn.rpush('need_spider_detail', url)
+        except EOFError:
+            pass
+
+
+if __name__:
+    manager = multiprocessing.Manager()
+    lock = manager.Lock()
+    for i in doc.find():
+        r_conn.lpush('need_spider_detail', 'https://www.dhzw.org/book/{}/{}/'.format(i["auth_id"], i["book_id"]))
+
+
+    pool = multiprocessing.Pool(processes=20)
+    for i in xrange(20):
+        pool.apply_async(func=test, args=(lock,))
+    pool.close()
+    pool.join()
+# get_book_detail(url)

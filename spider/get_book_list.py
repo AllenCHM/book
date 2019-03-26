@@ -121,7 +121,7 @@ def fork_spider(lock):
 if __name__ == "__main__":
     manager = multiprocessing.Manager()
     lock = manager.Lock()
-    for k in xrange(2, 7):
+    for k in xrange(1, 7):
         for i in xrange(0, 200, 10):
             r_conn.lpush('need_spider', 'https://www.dhzw.org/sort{}/{}.html'.format(k, i))
 
