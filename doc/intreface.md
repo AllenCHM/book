@@ -190,7 +190,7 @@
 | | |                         |
 
 ###### 接口示例
-> 地址：[http://xxx/api/book?id=233697](http://xxx/api/book?id==233697)
+> 地址：[http://xxx/api/v1/book?id=233697](http://xxx/api/v1/book?id==233697)
 ``` javascript
 [
     {
