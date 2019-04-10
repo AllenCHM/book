@@ -7,7 +7,7 @@
 2\. 搜索书籍
 4\. 获取书籍章节详情
 6\. 查看章节内容
-
+7\. 查看书籍是否更新
 ---
 
 **1\. 搜索书籍**
@@ -274,4 +274,38 @@
 ``` javascript
 <div>
 </div>
+```
+
+---
+
+**7\. 查看书籍是否更新**
+###### 接口功能
+>
+
+###### URL
+> /api/v1/check_update
+
+###### HTTP请求方式
+> POST(x-www-form-urlencoded)
+
+###### 返回格式
+> JSON
+
+###### 请求参数
+> |参数|必选|类型|说明|
+|:-----  |:-------|:-----|-----                               |
+|  book_id  | 是   |String|    书籍ID                       |
+|  last_modify  | 是   |String|    书籍最后修改时间                       |
+
+
+###### 返回字段
+> |返回字段|字段类型|说明                              |
+|:-----   |:------|:-----------------------------   |
+|  changed |  bool  | True/False  |
+
+
+###### 接口示例
+> 地址：[http://xxxxxxxxx/api/v1/check_update](http://xxxxxxxxx/api/v1/check_update)
+``` javascript
+{"changed": true}
 ```
