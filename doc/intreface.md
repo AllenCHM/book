@@ -342,7 +342,7 @@
 
 |参数|必选|类型|说明|
 |:-----  |:-------|:-----|-----                               |
-|  book_id  | 是   |String|    书籍ID                       |
+|  id  | 是   |String|    书籍ID                       |
 
 
 ###### 返回字段
@@ -360,7 +360,7 @@
 
 
 ###### 接口示例
-> 地址：[http://xxxxxxxxx/api/v1/check_update](http://xxxxxxxxx/api/v1/check_update)
+> 地址：[http://xxxxxxxxx/api/v1/book_detail](http://xxxxxxxxx/api/v1/book_detail)
 ``` javascript
 {
     "auth_name": "沉湎过客",
